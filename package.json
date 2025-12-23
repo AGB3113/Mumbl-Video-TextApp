@@ -1,0 +1,15 @@
+{
+  "name": "mumbl-video-textapp",
+  "version": "1.0.0",
+  "description": "Prototype real-time messaging app with NFC-style friend add, location sharing, stories, and calls.",
+  "main": "api_server.js",
+  "scripts": {
+    "start": "node api_server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
