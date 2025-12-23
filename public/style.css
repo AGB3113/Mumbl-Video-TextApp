@@ -1,0 +1,139 @@
+:root {
+  --glass: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.2);
+  --text: #e9ecf2;
+  --accent: #7dd3fc;
+  --bg: radial-gradient(circle at 20% 20%, #0f172a, #050b18 45%);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  padding: 16px;
+}
+
+.identity {
+  min-width: 280px;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: #a5b4fc;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.list li {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+input, select, button {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.35);
+  color: var(--text);
+  outline: none;
+  font-size: 14px;
+}
+
+button {
+  cursor: pointer;
+  background: linear-gradient(120deg, #7dd3fc, #c084fc);
+  border: none;
+  color: #0b1021;
+  font-weight: 700;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #a5f3fc;
+}
+
+.messages {
+  min-height: 220px;
+  max-height: 320px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.message {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+}
+
+.message small {
+  display: block;
+  color: #a5b4fc;
+  margin-top: 4px;
+}
+
+.hint {
+  margin: 0;
+  color: #cbd5e1;
+}

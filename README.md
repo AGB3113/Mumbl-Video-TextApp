@@ -1,28 +1,40 @@
 # MUMBL Chat
 
-A high-performance, real-time messaging application featuring glassmorphism UI, secure OTP verification, and WebRTC video calling.
+A real-time messaging prototype featuring NFC-style friend exchange, stories, group chat, live location sharing, and WebRTC audio calling. Designed for quick prototyping and mobile testing via HTTPS tunnels (ngrok or similar).
 
-## 🌐 The Role of ngrok in this Project
-This application utilizes several modern Web APIs that require a **Secure Context (HTTPS)** to function:
-1. **WebRTC:** For peer-to-peer video and audio calling.
-2. **Push API:** For receiving notifications when the browser is closed.
-3. **MediaDevices API:** For accessing the camera and microphone.
+## 🌐 Why HTTPS/Ngrok?
+Several APIs require a **secure context (HTTPS)** to work on real devices:
+- **WebRTC:** peer-to-peer audio calls
+- **Geolocation:** live location sharing
+- **Web NFC (where supported):** tap-to-add friends
 
-Since local development typically runs on `http://localhost`, **ngrok** is used to create a secure tunnel. This allows you to test these features on physical mobile devices by providing a public `https://` URL that tunnels directly to your local machine.
+Use `ngrok http 3000` (or similar) to expose your local server over HTTPS for realistic testing.
 
-## 🚀 Setup Instructions
+## 🚀 Setup
+1. Install dependencies
+   ```bash
+   npm install
+   ```
+2. Run the server
+   ```bash
+   npm start
+   ```
+3. (Optional) Expose via ngrok for mobile testing
+   ```bash
+   ngrok http 3000
+   ```
+4. Open `http://localhost:3000` (or your ngrok HTTPS URL) in two tabs/devices to try chat, NFC tokens, location, and calls.
 
-### 1. Prerequisites
-- [Node.js](https://nodejs.org/) installed.
-- [ngrok](https://ngrok.com/) installed and authenticated.
+## 🧭 Feature Guide
+- **Register**: choose a display name and join.
+- **Add friends via NFC token**: generate a token (auto-copied), share it, and the other user claims it. Web NFC is used if available, otherwise you can paste the token.
+- **Chat**: send direct messages to friends or join a group by ID and chat within it.
+- **Same LAN picker**: refresh the "Same LAN devices" panel to target chat/calls or add friends who are on the same local network.
+- **Stories**: post 24-hour text stories; friends receive them instantly.
+- **Location sharing**: share your current coordinates with friends (requires geolocation permissions).
+- **Calls**: start an audio call with a friend; signaling uses Socket.IO and media flows via WebRTC.
 
-### 2. Installation
-```bash
-npm install
-
-4. Running the App
-Start the Node server:
-node api_server.js
-Start the ngrok tunnel: In a new terminal window, run:
-ngrok http 3000
-Connect: Use the https://... URL provided by ngrok on your mobile device or desktop browser.
+## 🛠️ Notes
+- Data is in-memory only; restart clears users/stories.
+- Web NFC support varies by platform; token entry fallback is provided.
+- TURN is not configured; for production-grade calls, add a TURN server alongside the existing STUN config.

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUMBL Live</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="glass">
+      <div>
+        <h1>MUMBL</h1>
+        <p class="subtitle">Tap to add, chat, share, and call.</p>
+      </div>
+      <div class="identity glass">
+        <label>Display name</label>
+        <div class="row">
+          <input id="name" placeholder="e.g. Skylar" />
+          <button id="register">Join</button>
+        </div>
+        <div class="status" id="status">Offline</div>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="glass" aria-label="Friends">
+        <div class="section-title">
+          <h2>Friends</h2>
+          <div class="row">
+            <button id="nfc-generate">Generate NFC Token</button>
+            <button id="nfc-claim">Claim Token</button>
+          </div>
+        </div>
+        <ul id="friends" class="list"></ul>
+      </section>
+
+      <section class="glass" aria-label="LAN devices">
+        <div class="section-title">
+          <h2>Same LAN devices</h2>
+          <div class="row">
+            <button id="refresh-lan">Refresh</button>
+            <p class="hint">Detects other users on the same local network.</p>
+          </div>
+        </div>
+        <ul id="lan-list" class="list" aria-live="polite"></ul>
+      </section>
+
+      <section class="glass" aria-label="Chat">
+        <div class="section-title">
+          <h2>Chat</h2>
+          <div class="row">
+            <input id="chat-target" placeholder="Friend or group id" />
+            <select id="chat-scope">
+              <option value="dm">Direct Message</option>
+              <option value="group">Group</option>
+            </select>
+            <button id="join-group">Join Group</button>
+          </div>
+        </div>
+        <div id="messages" class="messages" aria-live="polite"></div>
+        <div class="row">
+          <input id="chat-body" placeholder="Say hi" />
+          <button id="send-chat">Send</button>
+        </div>
+      </section>
+
+      <section class="glass" aria-label="Stories and Location">
+        <div class="section-title">
+          <h2>Stories</h2>
+          <div class="row">
+            <input id="story-body" placeholder="Share something for 24h" />
+            <button id="post-story">Post</button>
+          </div>
+        </div>
+        <ul id="story-feed" class="list"></ul>
+        <div class="section-title">
+          <h2>Location</h2>
+          <div class="row">
+            <button id="share-location">Share my location</button>
+          </div>
+        </div>
+        <ul id="location-feed" class="list"></ul>
+      </section>
+
+      <section class="glass" aria-label="Calls">
+        <div class="section-title">
+          <h2>Calls (WebRTC)</h2>
+          <p class="hint">Start a call with a friend; both must be online in this tab.</p>
+        </div>
+        <div class="row">
+          <input id="call-target" placeholder="Friend name" />
+          <button id="start-call">Start Call</button>
+        </div>
+        <div class="row">
+          <button id="hangup" disabled>Hang Up</button>
+          <div id="call-state" class="status">Idle</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
