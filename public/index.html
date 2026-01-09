@@ -3,103 +3,194 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUMBL Live</title>
+  <title>Mumbl Logistics</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
-    <header class="glass">
+    <header class="top-bar glass">
       <div>
-        <h1>MUMBL</h1>
-        <p class="subtitle">Tap to add, chat, share, and call.</p>
+        <p class="eyebrow">MUMBL LOGISTICS</p>
+        <h1>Precision delivery for modern supply chains.</h1>
+        <p class="subtitle">Track, ship, and deliver with real-time clarity.</p>
       </div>
-      <div class="identity glass">
-        <label>Display name</label>
-        <div class="row">
-          <input id="name" placeholder="e.g. Skylar" />
-          <button id="register">Join</button>
-        </div>
-        <div class="status" id="status">Offline</div>
+      <div class="auth-card glass">
+        <h2>Sign in</h2>
+        <label>
+          Name
+          <input id="login-name" placeholder="e.g. Skylar" />
+        </label>
+        <label>
+          Role
+          <select id="login-role">
+            <option value="client">Client</option>
+            <option value="employee">Employee</option>
+            <option value="shipper">Shipper</option>
+          </select>
+        </label>
+        <button id="login-btn">Enter Dashboard</button>
+        <button id="logout-btn" class="ghost" hidden>Log out</button>
+        <div id="login-status" class="status">Offline</div>
       </div>
     </header>
 
-    <main class="grid">
-      <section class="glass" aria-label="Friends">
-        <div class="section-title">
-          <h2>Friends</h2>
-          <div class="row">
-            <button id="nfc-generate">Generate NFC Token</button>
-            <button id="nfc-claim">Claim Token</button>
+    <section class="metrics">
+      <div class="metric-card glass">
+        <p>Packages in network</p>
+        <h3 id="metric-total">0</h3>
+      </div>
+      <div class="metric-card glass">
+        <p>Active centers</p>
+        <h3 id="metric-centers">1</h3>
+      </div>
+      <div class="metric-card glass">
+        <p>On-time rate</p>
+        <h3>98.4%</h3>
+      </div>
+    </section>
+
+    <main class="portal-grid">
+      <section class="portal glass" id="client-portal">
+        <div class="portal-header">
+          <div>
+            <h2>Client Portal</h2>
+            <p>Submit a shipping listing and track status updates.</p>
           </div>
+          <span class="pill">Role: Client</span>
         </div>
-        <ul id="friends" class="list"></ul>
+        <form id="listing-form" class="form-grid">
+          <label>
+            Size
+            <input name="size" placeholder="Small / Medium / Large" required />
+          </label>
+          <label>
+            Weight
+            <input name="weight" placeholder="e.g. 4.5 kg" required />
+          </label>
+          <label>
+            Drop-off Location
+            <input name="dropoff" placeholder="Dock 7, East Harbor" required />
+          </label>
+          <label>
+            Sender Name
+            <input name="sender" placeholder="Sender name" required />
+          </label>
+          <label class="full">
+            Delivery Address
+            <input name="address" placeholder="123 Based Ave, Neon City" required />
+          </label>
+          <button type="submit" class="full">Submit Listing</button>
+        </form>
+        <div class="card-list" id="client-listings"></div>
       </section>
 
-      <section class="glass" aria-label="LAN devices">
-        <div class="section-title">
-          <h2>Same LAN devices</h2>
-          <div class="row">
-            <button id="refresh-lan">Refresh</button>
-            <p class="hint">Detects other users on the same local network.</p>
+      <section class="portal glass" id="admin-portal">
+        <div class="portal-header">
+          <div>
+            <h2>Business Portal</h2>
+            <p>Manage centers, fleet accounts, and package status.</p>
+          </div>
+          <span class="pill">Role: Employee</span>
+        </div>
+        <div class="admin-grid">
+          <div class="glass sub-card">
+            <h3>Center Management</h3>
+            <form id="center-form" class="form-grid compact">
+              <label>
+                Center Name
+                <input name="name" placeholder="Downtown Hub" required />
+              </label>
+              <label>
+                GPS Coordinates
+                <input name="location" placeholder="40.7128, -74.0060" required />
+              </label>
+              <button type="submit" class="full">Create Center</button>
+            </form>
+            <div id="center-list" class="card-list"></div>
+          </div>
+          <div class="glass sub-card">
+            <h3>Fleet Management</h3>
+            <form id="account-form" class="form-grid compact">
+              <label>
+                Name
+                <input name="name" placeholder="Jordan Driver" required />
+              </label>
+              <label>
+                Role
+                <select name="role">
+                  <option value="employee">Employee</option>
+                  <option value="shipper">Shipper</option>
+                </select>
+              </label>
+              <label>
+                Center
+                <select name="centerId" id="account-center"></select>
+              </label>
+              <button type="submit" class="full">Create Account</button>
+            </form>
+            <div id="account-list" class="card-list"></div>
+          </div>
+          <div class="glass sub-card full">
+            <div class="section-row">
+              <h3>Package Overview</h3>
+              <input id="package-search" placeholder="Search by sender or address" />
+            </div>
+            <div class="table" id="package-table"></div>
           </div>
         </div>
-        <ul id="lan-list" class="list" aria-live="polite"></ul>
       </section>
 
-      <section class="glass" aria-label="Chat">
-        <div class="section-title">
-          <h2>Chat</h2>
-          <div class="row">
-            <input id="chat-target" placeholder="Friend or group id" />
-            <select id="chat-scope">
-              <option value="dm">Direct Message</option>
-              <option value="group">Group</option>
-            </select>
-            <button id="join-group">Join Group</button>
+      <section class="portal glass" id="shipper-portal">
+        <div class="portal-header">
+          <div>
+            <h2>Shipper Portal</h2>
+            <p>Claim packages, follow the route, and confirm delivery.</p>
           </div>
+          <span class="pill">Role: Shipper</span>
         </div>
-        <div id="messages" class="messages" aria-live="polite"></div>
-        <div class="row">
-          <input id="chat-body" placeholder="Say hi" />
-          <button id="send-chat">Send</button>
-        </div>
-      </section>
-
-      <section class="glass" aria-label="Stories and Location">
-        <div class="section-title">
-          <h2>Stories</h2>
-          <div class="row">
-            <input id="story-body" placeholder="Share something for 24h" />
-            <button id="post-story">Post</button>
+        <div class="shipper-grid">
+          <div class="glass sub-card">
+            <h3>Center Queue</h3>
+            <div id="shipper-queue" class="card-list"></div>
           </div>
-        </div>
-        <ul id="story-feed" class="list"></ul>
-        <div class="section-title">
-          <h2>Location</h2>
-          <div class="row">
-            <button id="share-location">Share my location</button>
+          <div class="glass sub-card">
+            <h3>Delivery Statistics</h3>
+            <div class="stats">
+              <div>
+                <p>In Transit</p>
+                <h4 id="stat-transit">0</h4>
+              </div>
+              <div>
+                <p>Delivered</p>
+                <h4 id="stat-delivered">0</h4>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <h3>Proof of Delivery</h3>
+            <input id="delivery-photo" type="file" accept="image/*" capture="environment" />
+            <button id="mark-delivered" class="full">Mark as Delivered</button>
           </div>
-        </div>
-        <ul id="location-feed" class="list"></ul>
-      </section>
-
-      <section class="glass" aria-label="Calls">
-        <div class="section-title">
-          <h2>Calls (WebRTC)</h2>
-          <p class="hint">Start a call with a friend; both must be online in this tab.</p>
-        </div>
-        <div class="row">
-          <input id="call-target" placeholder="Friend name" />
-          <button id="start-call">Start Call</button>
-        </div>
-        <div class="row">
-          <button id="hangup" disabled>Hang Up</button>
-          <div id="call-state" class="status">Idle</div>
+          <div class="glass sub-card full">
+            <h3>Route Map</h3>
+            <div id="map" class="map"></div>
+          </div>
         </div>
       </section>
     </main>
   </div>
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
   <script src="app.js"></script>
 </body>
 </html>
